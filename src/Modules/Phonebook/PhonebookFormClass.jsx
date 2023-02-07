@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { Component } from 'react';
 import styles from './phonebook.module.scss';
-import ContactForm from './ContactForm/ContactFormClass';
+import ContactForm from './ContactForm/ContactForm';
 import FindContact from './FindContact/FindContact';
 import findCntct from '../../components/findCntct';
 
