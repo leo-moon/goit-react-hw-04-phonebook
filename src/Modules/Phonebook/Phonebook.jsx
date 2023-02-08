@@ -1,11 +1,98 @@
 import { nanoid } from 'nanoid';
-import { Component } from 'react';
+import { useState } from 'react';
 import styles from './phonebook.module.scss';
 import ContactForm from './ContactForm/ContactForm';
 import FindContact from './FindContact/FindContact';
 import findCntct from '../../components/findCntct';
 
-class Phonebook extends Component {
+const Phonebook = () => {
+  const [contacts, setContacts] = useState([
+    { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
+    { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
+    { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
+    { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
+  ]);
+  const filter = '';
+
+  const addContact = ({ name, number }) => {
+    if (isDublicate(name)) {
+      return alert(`${name} is already in contacts`);
+    }
+    setContacts(prevContact => {
+      const newContact = {
+        id: nanoid(),
+        name: name,
+        number: number,
+      };
+      return  [...contacts, newContact]
+    });
+  };
+
+  const isDublicate = name => {
+    const nameLower = name.toLowerCase();
+    const dublicate = contacts.find(
+      contact => contact.name.toLowerCase() === nameLower
+    );
+    return Boolean(dublicate);
+  };
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setContacts({ [name]: value });
+  };
+
+  const removeContact = id => {
+    const newList = contacts.filter(contact => contact.id !== id);
+    return { contacts: [...newList] };
+  };
+
+  //   componentDidMount() {
+  //   const contactsLS = JSON.parse(localStorage.getItem('phonebookformclass'));
+  //   if (contacts?.length) {
+  //     setContacts({ contactsLS });
+  //   }
+  // }
+
+
+  // componentDidUpdate(prevProps, prevContacts) {
+  //   if (contacts.length !== prevContacts.contacts.length)
+  //     localStorage.setItem('phonebookformclass', JSON.stringify(contacts));
+  // } 
+
+
+
+
+  const contactsFilter = findCntct(filter, contacts);
+  const elementsLi = contactsFilter.map(({ id, name, number }) => (
+    <li className={styles.li} key={id}>
+      {name} : {number}
+      <button
+        onClick={() => removeContact(id)}
+        className={`${styles.btn} ${styles.deleteBtn}`}
+        type="button"
+      >
+        Delete
+      </button>
+    </li>
+  ));
+
+  return (
+    <>
+      <h3 className={styles.mainTitle}>Phonebook Form</h3>
+
+      <ContactForm onSubmit={addContact} />
+      <h3 className={styles.mainTitle}>Contacts</h3>
+      <div className={styles.find}>
+        <FindContact handleChange={handleChange} />
+        <ul>{elementsLi}</ul>
+      </div>
+    </>
+  );
+};
+
+export default Phonebook;
+
+/*class Phonebook extends Component {
   state = {
     contacts: [
       { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
@@ -96,5 +183,4 @@ class Phonebook extends Component {
     );
   }
 }
-
-export default Phonebook;
+*/
