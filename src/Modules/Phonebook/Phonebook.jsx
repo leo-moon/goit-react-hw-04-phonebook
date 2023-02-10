@@ -12,19 +12,20 @@ const Phonebook = () => {
     { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
     { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
   ]);
-  const filter = '';
+  // let filter = '';
+  const [filter, setFilter] = useState('');
 
   const addContact = ({ name, number }) => {
     if (isDublicate(name)) {
       return alert(`${name} is already in contacts`);
     }
-    setContacts(prevContact => {
+    setContacts(() => {
       const newContact = {
         id: nanoid(),
         name: name,
         number: number,
       };
-      return  [...contacts, newContact]
+      return [...contacts, newContact];
     });
   };
 
@@ -36,31 +37,37 @@ const Phonebook = () => {
     return Boolean(dublicate);
   };
 
-  const handleChange = ({ target }) => {
-    const { name, value } = target;
-    setContacts({ [name]: value });
-  };
+  // const handleChange = ({ target }) => {
+  //   const { name, value } = target;
+  //   setContacts({ [name]: value });
+  // };
+
+
 
   const removeContact = id => {
     const newList = contacts.filter(contact => contact.id !== id);
-    return { contacts: [...newList] };
+    setContacts(() => {
+      return [...newList];
+    });
   };
 
-  //   componentDidMount() {
+  //   componentDidMount=()=> {
   //   const contactsLS = JSON.parse(localStorage.getItem('phonebookformclass'));
   //   if (contacts?.length) {
   //     setContacts({ contactsLS });
   //   }
   // }
 
-
-  // componentDidUpdate(prevProps, prevContacts) {
+  // const componentDidUpdate = (prevProps, prevContacts) => {
   //   if (contacts.length !== prevContacts.contacts.length)
   //     localStorage.setItem('phonebookformclass', JSON.stringify(contacts));
-  // } 
+  // };
 
-
-
+  const handleFilter = ({ target }) => {
+    setFilter(() => {
+      return target.value;
+    });
+  };
 
   const contactsFilter = findCntct(filter, contacts);
   const elementsLi = contactsFilter.map(({ id, name, number }) => (
@@ -83,7 +90,7 @@ const Phonebook = () => {
       <ContactForm onSubmit={addContact} />
       <h3 className={styles.mainTitle}>Contacts</h3>
       <div className={styles.find}>
-        <FindContact handleChange={handleChange} />
+        <FindContact handleFilter={handleFilter} />
         <ul>{elementsLi}</ul>
       </div>
     </>
@@ -91,6 +98,10 @@ const Phonebook = () => {
 };
 
 export default Phonebook;
+
+
+
+
 
 /*class Phonebook extends Component {
   state = {
