@@ -58,6 +58,12 @@ const ContactForm = ({onSubmit}) => {
 
 export default ContactForm;
 
+
+
+
+
+
+
 /*class ContactFormClass extends Component {
   state = { ...initState };
 

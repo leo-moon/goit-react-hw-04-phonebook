@@ -1,19 +1,20 @@
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './phonebook.module.scss';
 import ContactForm from './ContactForm/ContactForm';
 import FindContact from './FindContact/FindContact';
 import findCntct from '../../components/findCntct';
 
 const Phonebook = () => {
-  const [contacts, setContacts] = useState([
-    { id: nanoid(), name: 'Rosie Simpson', number: '459-12-56' },
-    { id: nanoid(), name: 'Hermione Kline', number: '443-89-12' },
-    { id: nanoid(), name: 'Eden Clements', number: '645-17-79' },
-    { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
-  ]);
-  // let filter = '';
+  const [contacts, setContacts] = useState(() => {
+    const contacts = JSON.parse(localStorage.getItem('phonebook'));
+    return contacts ? contacts : [];
+  });
   const [filter, setFilter] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('phonebook', JSON.stringify(contacts));
+  }, [contacts]);
 
   const addContact = ({ name, number }) => {
     if (isDublicate(name)) {
@@ -37,31 +38,12 @@ const Phonebook = () => {
     return Boolean(dublicate);
   };
 
-  // const handleChange = ({ target }) => {
-  //   const { name, value } = target;
-  //   setContacts({ [name]: value });
-  // };
-
-
-
   const removeContact = id => {
     const newList = contacts.filter(contact => contact.id !== id);
     setContacts(() => {
       return [...newList];
     });
   };
-
-  //   componentDidMount=()=> {
-  //   const contactsLS = JSON.parse(localStorage.getItem('phonebookformclass'));
-  //   if (contacts?.length) {
-  //     setContacts({ contactsLS });
-  //   }
-  // }
-
-  // const componentDidUpdate = (prevProps, prevContacts) => {
-  //   if (contacts.length !== prevContacts.contacts.length)
-  //     localStorage.setItem('phonebookformclass', JSON.stringify(contacts));
-  // };
 
   const handleFilter = ({ target }) => {
     setFilter(() => {
@@ -98,10 +80,6 @@ const Phonebook = () => {
 };
 
 export default Phonebook;
-
-
-
-
 
 /*class Phonebook extends Component {
   state = {
